@@ -42,11 +42,11 @@ var options = blessed.list({
   border: {
     type: 'line'
   },
-  items: ["Set status to Available","Set status to Busy","Set status to Away"],
+  items: ["Set status to Available","Set status to Busy","Set status to Away","Start Pomodoro"],
   top: 'center',
   left: 'center',
   width: 40,
-  height: 5,
+  height: 6,
   selectedBg: "#fff",
   selectedFg: "#000"
 });
@@ -64,6 +64,9 @@ options.on('select', function(e) {
     case "Set status to Away":
       globals.prio = 5;
       blink.setRGB(255,255,0);
+    break;
+    case "Start Pomodoro":
+      require('./pomodoro')();
     break;
     default:
     break;

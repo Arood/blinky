@@ -1,6 +1,10 @@
 var color = require('onecolor');
+var stopPattern = true;
 
 var globals = {
+  stopPattern: function() {
+    stopPattern = true;
+  },
   playPattern: function(name, repeats) {
     var prevprio = globals.prio;
     globals.prio = 20;
@@ -8,7 +12,7 @@ var globals = {
     var i, p = [], pattern, patterns = globals.patterns, length = patterns.length;
     for (i=0; i<length; i++) {
       if (patterns[i].name === name) {
-        pattern = patterns[i];
+        pattern = JSON.parse(JSON.stringify(patterns[i]));
       }
     }
     if (!pattern) return;
@@ -20,11 +24,19 @@ var globals = {
       p = p.concat(pattern.pattern);
     }
 
+    if (stopPattern) {
+      stopPattern = false;
+    }
+
     var run = function() {
-      if (p.length < 3) {
-        globals.prio = prevprio;
-        globals.blink.setRGB(currentColor[0], currentColor[1], currentColor[2]);
-        return;
+      if (p.length < 3 || stopPattern) {
+        if (repeats > -1 || stopPattern) {
+          globals.prio = prevprio;
+          globals.blink.setRGB(currentColor[0], currentColor[1], currentColor[2]);
+          return;
+        } else {
+          p = p.concat(pattern.pattern);
+        }
       }
       var rgb = color(p.shift()),
           time = parseFloat(p.shift()),
@@ -37,8 +49,8 @@ var globals = {
     }
     globals.blink.rgb(function(r, g, b) {
       currentColor = [r, g, b];
+      run();
     });
-    run();
   },
   patterns: [
     {
@@ -48,6 +60,11 @@ var globals = {
       "readonly": false,
       "repeats": 5,
       "system": false
+    },
+    {
+      "name": "calmdown",
+      "pattern": "3,#00ff33,2,1,#ff00e9,2,2,#ff0004,2,1,#003fff,2,2,#faff00,2,1,#ffffff,2,1",
+      "repeats": 3
     },
     {
       "date": 1422609561,
@@ -88,4 +105,3 @@ var globals = {
 };
 
 module.exports = globals;
-

@@ -11,8 +11,8 @@
   "dependencies": {
     "blessed": "x.x.x",
     "node-blink1": "x.x.x",
-    "node-schedule": "^0.1.15",
-    "onecolor": "^2.5.0"
+    "node-schedule": "0.x.x",
+    "onecolor": "2.5.0"
   },
   "optionalDependencies": {
     "applescript": "x.x.x"
